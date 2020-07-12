@@ -4,7 +4,8 @@ import UIKit
 extension Snapshotting where Value == UIView, Format == UIImage {
   /// A snapshot strategy for comparing views based on pixel equality.
   public static var image: Snapshotting {
-    return .image()
+    let traits: UITraitCollection = .init(layoutDirection: .localeBased)
+    return .image(traits: traits)
   }
 
   /// A snapshot strategy for comparing views based on pixel equality.
@@ -62,4 +63,13 @@ extension Snapshotting where Value == UIView, Format == String {
       }
   }
 }
+
+extension UITraitEnvironmentLayoutDirection {
+    static var localeBased: UITraitEnvironmentLayoutDirection {
+        Locale.characterDirection(forLanguage: Locale.current.languageCode!) == .rightToLeft
+            ? .rightToLeft
+            : .leftToRight
+    }
+}
+
 #endif

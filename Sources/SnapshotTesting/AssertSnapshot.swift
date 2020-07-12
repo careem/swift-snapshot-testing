@@ -179,11 +179,22 @@ public func verifySnapshot<Value, Format>(
       let fileUrl = URL(fileURLWithPath: "\(file)", isDirectory: false)
       let fileName = fileUrl.deletingPathExtension().lastPathComponent
 
+      let languagePath: String?
+      let arguments = ProcessInfo.processInfo.arguments
+      if let index = arguments.firstIndex(of: "-AppleLanguages") {
+        languagePath = arguments[index.advanced(by: 1)]
+                .trimmingCharacters(in: CharacterSet.punctuationCharacters)
+        
+      } else {
+        languagePath = nil
+      }
+      
       let snapshotDirectoryUrl = snapshotDirectory.map { URL(fileURLWithPath: $0, isDirectory: true) }
         ?? fileUrl
           .deletingLastPathComponent()
           .appendingPathComponent("__Snapshots__")
           .appendingPathComponent(fileName)
+          .appendingPathComponent(languagePath ?? "")
 
       let identifier: String
       if let name = name {
